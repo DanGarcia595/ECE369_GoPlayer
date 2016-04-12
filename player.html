@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <title>a simple music player</title>        
+        <title>The most boss ECE 369 project you've ever seen. EVER. </title>        
 <style>
     body{
         font-family: sans-serif，Verdana, Arial, Helvetica;
@@ -42,21 +42,23 @@
         overflow: hidden;
         margin-bottom: 2px;
 	font-size : 30px;
+	color: white;
     }
-    #playlist a.file { background: #66CDAA;}
+    #playlist a.file { background: #777777;}
  
-    #playlist { background: #3CB371; }
-    #playlist a { background: #7CCD7C; }
-    #playlist a.playing { background: #9ACD32; font-weight: bold; color: red;}
-    #playlist a:hover { background: #EEC900;}
+    #playlist { background: white; }
+    #playlist a { background: #777777; }
+    #playlist a.playing { background: #559e83; font-weight: bold; color: #111111;}
+    #playlist a:hover { background: #c3cb71; color: #111111 }
  
 </style>
 <script src="http://www.google.com/jsapi" type="text/javascript"></script>
 <script type="text/javascript">
- 
+
 var root = "/music/";
 var path = [];
- 
+var play = false;
+
 function init() {
     load(path);
     $('#player').bind('ended', next);
@@ -96,12 +98,31 @@ function clickFile(e) {
     $(e.target).addClass('playing')
     $('#player').attr('src', url);
     $('#player').play();
+    play = true;
 }
 function next() {
     var $next = $('#playlist a.playing').next();
     if ($next.length) $next.click();
 }
- 
+
+
+function onKeyDown(event) {
+        switch (event.keyCode) {
+            case 32: //SpaceBar                    
+                if (play) {
+                    $('#player').trigger("pause");
+                    play = false;
+                } else {
+                    $('#player').trigger("play");
+                    play = true;
+                }
+                break;
+            }
+	  return false;
+}
+
+window.addEventListener("keydown", onKeyDown, false);
+
 google.load("jquery", "1.3.1");
 google.setOnLoadCallback(init);
 </script>
@@ -111,7 +132,7 @@ google.setOnLoadCallback(init);
         <p>What? Your browser doesn't support</p>
         </audio>
         <div id="playlist"></div>
-	<BUTTON id ="btn" title = "skip this song!" style="font-size : 90px">SKIP</BUTTON><br>
+	<BUTTON id ="btn" title = "skip this song!" style="font-size : 90px ; background: #ae5a41">SKIP</BUTTON><br>
 	<a href="https://www.dropbox.com/request/dKdoCjlHe2gAG5qXiogv" style="font-size: 50px; margin-left: 40%">Upload Your Files!</a>
     </body>
 </html>
