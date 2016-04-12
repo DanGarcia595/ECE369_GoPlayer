@@ -30,7 +30,7 @@
         margin-top:  5px;
         height: 150px;
         overflow: auto;
-        background: #EEB422;
+        background: #a3c1ad;
         font-weight: bold;
         color: white;
     }
@@ -44,12 +44,12 @@
 	font-size : 30px;
 	color: white;
     }
-    #playlist a.file { background: #777777;}
+    #playlist a.file { background: #a3c1ad;}
  
     #playlist { background: white; }
-    #playlist a { background: #777777; }
-    #playlist a.playing { background: #559e83; font-weight: bold; color: #111111;}
-    #playlist a:hover { background: #c3cb71; color: #111111 }
+    #playlist a { background: #a3c1ad; }
+    #playlist a.playing { background: #5f9ea0; font-weight: bold; color: #111111;}
+    #playlist a:hover { background: #a0d6b4; color: #111111 }
  
 </style>
 <script src="http://www.google.com/jsapi" type="text/javascript"></script>
@@ -59,6 +59,7 @@ var root = "/music/";
 var path = [];
 var play = false;
 
+var next_pressed = false;
 function init() {
     load(path);
     $('#player').bind('ended', next);
@@ -94,6 +95,7 @@ function clickFile(e) {
     var name = f.Name;
     var path = f.Path;
     var url = root+path+'/'+name;
+    next_pressed = true;
     $('#playlist a').removeClass('playing');
     $(e.target).addClass('playing')
     $('#player').attr('src', url);
@@ -101,8 +103,31 @@ function clickFile(e) {
     play = true;
 }
 function next() {
-    var $next = $('#playlist a.playing').next();
-    if ($next.length) $next.click();
+    if(next_pressed){
+    	var $next = $('#playlist a.playing').next();
+	if ($next.length) {
+		$next.click();
+	}else{
+		var f = $('#playlist a:first-child').data('file');
+    		var name = f.Name;
+    		var path = f.Path;
+    		var url = root+path+'/'+name;
+		$('#playlist a:first-child').addClass('playing');
+		$('#playlist a:last-child').removeClass('playing');
+		$('#player').attr('src', url);
+		$('#player').trigger("play");
+
+	}
+    }else{
+	next_pressed = true;
+	var f = $('#playlist a:first-child').data('file');
+    	var name = f.Name;
+    	var path = f.Path;
+    	var url = root+path+'/'+name;
+	$('#playlist a:first-child').addClass('playing');
+	$('#player').attr('src', url);
+	$('#player').trigger("play");
+    }
 }
 
 
@@ -132,7 +157,7 @@ google.setOnLoadCallback(init);
         <p>What? Your browser doesn't support</p>
         </audio>
         <div id="playlist"></div>
-	<BUTTON id ="btn" title = "skip this song!" style="font-size : 90px ; background: #ae5a41">SKIP</BUTTON><br>
+	<BUTTON id ="btn" title = "skip this song!" style="font-size : 90px ; background: #a3c1ad">NEXT</BUTTON><br>
 	<a href="https://www.dropbox.com/request/dKdoCjlHe2gAG5qXiogv" style="font-size: 50px; margin-left: 40%">Upload Your Files!</a>
     </body>
 </html>
