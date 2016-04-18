@@ -20,3 +20,5 @@ Because honestly why not?
 ```
 go get github.com/DanGarcia595/ECE369_GoPlayer
 ```
+
+An ECE 369 Project by Daniel Garcia
