@@ -16,11 +16,17 @@ type FileInfo struct {
 const (
 	filePrefix = "/music/"
 	root       = "./music"
+	css        = "/css/"
+	css_root   = "./css"
+	js         = "/js/"
+	js_root    = "./js"
 )
 
 func main() {
 	http.HandleFunc("/", playerMainFrame)
 	http.HandleFunc(filePrefix, File)
+	http.HandleFunc(css, CSS)
+	http.HandleFunc(js, JS)
 	http.ListenAndServe(":80", nil)
 }
 
@@ -41,7 +47,32 @@ func File(w http.ResponseWriter, r *http.Request) {
 	}
 	http.ServeFile(w, r, path)
 }
-
+func CSS(w http.ResponseWriter, r *http.Request) {
+	path := filepath.Join(css_root, r.URL.Path[len(css):])
+	stat, err := os.Stat(path)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	if stat.IsDir() {
+		serveDir(w, r, path)
+		return
+	}
+	http.ServeFile(w, r, path)
+}
+func JS(w http.ResponseWriter, r *http.Request) {
+	path := filepath.Join(js_root, r.URL.Path[len(js):])
+	stat, err := os.Stat(path)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	if stat.IsDir() {
+		serveDir(w, r, path)
+		return
+	}
+	http.ServeFile(w, r, path)
+}
 func serveDir(w http.ResponseWriter, r *http.Request, path string) {
 	defer func() {
 		if err, ok := recover().(error); ok {

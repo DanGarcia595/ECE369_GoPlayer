@@ -90,7 +90,6 @@ function next() {
     	var path = f.Path;
     	var url = root+path+'/'+name;
 	$('#playlist a:first-child').addClass('playing');
-	$('#playlist a:first-child').addClass('active');
 	$('#player').attr('src', url);
 	$('#player').trigger("play");
     }
