@@ -20,6 +20,8 @@ const (
 	css_root   = "./css"
 	js         = "/js/"
 	js_root    = "./js"
+	font       = "/font/"
+	font_root  = "./font"
 )
 
 func main() {
@@ -27,7 +29,14 @@ func main() {
 	http.HandleFunc(filePrefix, File)
 	http.HandleFunc(css, CSS)
 	http.HandleFunc(js, JS)
-	http.ListenAndServe(":80", nil)
+	http.ListenAndServeTLS(":443", "cert.pem", "key.pem", nil)
+	http.HandleFunc(font, Font)
+	http.ListenAndServe(":80", http.HandlerFunc(redir))
+
+}
+
+func redir(w http.ResponseWriter, req *http.Request) {
+	http.Redirect(w, req, "https://localhost"+req.RequestURI, http.StatusMovedPermanently)
 }
 
 func playerMainFrame(w http.ResponseWriter, r *http.Request) {
@@ -49,6 +58,19 @@ func File(w http.ResponseWriter, r *http.Request) {
 }
 func CSS(w http.ResponseWriter, r *http.Request) {
 	path := filepath.Join(css_root, r.URL.Path[len(css):])
+	stat, err := os.Stat(path)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	if stat.IsDir() {
+		serveDir(w, r, path)
+		return
+	}
+	http.ServeFile(w, r, path)
+}
+func Font(w http.ResponseWriter, r *http.Request) {
+	path := filepath.Join(font_root, r.URL.Path[len(font):])
 	stat, err := os.Stat(path)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
