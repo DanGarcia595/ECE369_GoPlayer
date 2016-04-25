@@ -29,9 +29,9 @@ func main() {
 	http.HandleFunc(filePrefix, File)
 	http.HandleFunc(css, CSS)
 	http.HandleFunc(js, JS)
-	http.ListenAndServeTLS(":443", "cert.pem", "key.pem", nil)
+//	http.ListenAndServeTLS(":443", "cert.pem", "key.pem", nil)
 	http.HandleFunc(font, Font)
-	http.ListenAndServe(":80", http.HandlerFunc(redir))
+	http.ListenAndServe(":80", nil)
 
 }
 
