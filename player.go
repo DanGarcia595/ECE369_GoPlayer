@@ -26,6 +26,7 @@ const (
 
 func main() {
 	http.HandleFunc("/", playerMainFrame)
+	http.HandleFunc("/favicon.ico", handlerICon)
 	http.HandleFunc(filePrefix, File)
 	http.HandleFunc(css, CSS)
 	http.HandleFunc(js, JS)
@@ -33,6 +34,11 @@ func main() {
 	http.HandleFunc(font, Font)
 	http.ListenAndServe(":80", nil)
 
+}
+
+func handlerICon(w http.ResponseWriter, r *http.Request) {
+
+	http.ServeFile(w,r,"./favicon.ico")
 }
 
 func redir(w http.ResponseWriter, req *http.Request) {
